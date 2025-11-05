@@ -19,7 +19,7 @@ afficher_mot() {
 }
 
 clear
-echo "=== 🎯 Jeu du PENDU ==="
+echo "=== Jeu du PENDU ==="
 echo "Devine le mot ! Tu as $essais essais."
 
 # --- Boucle principale ---
@@ -41,7 +41,7 @@ while [ $essais -gt 0 ]; do
 
     # Vérifier si la lettre est dans le mot
     if [[ $mot == *$lettre* ]]; then
-        echo "✅ Bonne lettre !"
+        echo "Bonne lettre ! :)"
         nouveau_mot=""
         for ((i=0; i<$longueur; i++)); do
             if [ "${mot:$i:1}" == "$lettre" ]; then
@@ -52,7 +52,7 @@ while [ $essais -gt 0 ]; do
         done
         mot_cache=$nouveau_mot
     else
-        echo "❌ Mauvaise lettre."
+        echo "Mauvaise lettre. :("
         ((essais--))
         echo "Il te reste $essais essais."
     fi
@@ -66,6 +66,6 @@ while [ $essais -gt 0 ]; do
 done
 
 echo
-echo "💀 Perdu ! Le mot était : $mot"
+echo "x( Perdu ! Le mot était : $mot"
 
 

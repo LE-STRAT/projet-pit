@@ -1,9 +1,7 @@
-#!/bin/bash
-# pendu.sh - jeu du pendu (11 tentatives) - utilise mots.txt si présent
 
 set -u
 
-# Nombre maximum d'erreurs autorisées (ici 11 - le pendu complet)
+# Nombre maximum d'erreurs autorisées (11)
 MAX_ATTEMPTS=11
 
 # ----- Charger le mot -----
@@ -18,10 +16,10 @@ else
     mot=${mots[$RANDOM % ${#mots[@]}]}
 fi
 
-# Normaliser en minuscules (évite les différences entre A et a)
+# transforme ajuscule en minuscules
 mot=$(echo "$mot" | tr '[:upper:]' '[:lower:]')
 
-# Vérifier que le mot n'est pas vide après nettoyage
+# Vérifie que le mot n'est pas vide après modification
 if [[ -z "$mot" ]]; then
     echo "Erreur : le mot choisi est vide. Vérifie le fichier mots.txt."
     exit 1
@@ -32,7 +30,7 @@ mot_affiche=$(echo "$mot" | sed 's/./_/g')  # chaine de _ de la bonne longueur
 attempts_left=$MAX_ATTEMPTS
 lettres_tentees=()  # tableau des lettres déjà proposées
 
-# Fonction d'affichage du pendu en 11 étapes (0 = rien, 11 = pendu complet)
+# Affichage du pendu en 11 étapes
 afficher_pendu() {
     erreurs=$((MAX_ATTEMPTS - attempts_left))
     echo ""
@@ -156,7 +154,7 @@ echo "Vous avez $attempts_left tentatives pour deviner le mot."
 afficher_pendu
 
 while [[ "$mot_affiche" != "$mot" && $attempts_left -gt 0 ]]; do
-    # Affichage du mot (horizontal) et lettres déjà essayées
+    # Affichage du mot ou lettres déjà essayées
     echo "Mot : $(echo "$mot_affiche" | sed 's/./& /g')"
     if [[ ${#lettres_tentees[@]} -gt 0 ]]; then
         echo "Lettres déjà essayées : ${lettres_tentees[*]}"
@@ -165,7 +163,7 @@ while [[ "$mot_affiche" != "$mot" && $attempts_left -gt 0 ]]; do
     fi
     echo "Tentatives restantes : $attempts_left"
 
-    # Lire une lettre valide (une seule lettre a-z)
+    # Lire une lettre pas encore utilisée
     read -p "Proposez une lettre : " lettre_raw
     lettre=$(echo "$lettre_raw" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]' | tr -d '\r')
 
@@ -179,13 +177,13 @@ while [[ "$mot_affiche" != "$mot" && $attempts_left -gt 0 ]]; do
         continue
     fi
 
-    # Déjà essayé ?
+    # Lettre déjà essayé
     if [[ " ${lettres_tentees[*]} " =~ " $lettre " ]]; then
         echo "Vous avez déjà proposé la lettre '$lettre'."
         continue
     fi
 
-    # Ajouter à la liste des tentatives
+    # Ajoute la lettre a la liste de lettres tentées
     lettres_tentees+=("$lettre")
 
     # Vérifier si la lettre est dans le mot
@@ -205,7 +203,7 @@ while [[ "$mot_affiche" != "$mot" && $attempts_left -gt 0 ]]; do
     afficher_pendu
 done
 
-# Résultat final
+# Fin
 if [[ "$mot_affiche" == "$mot" ]]; then
     echo " Félicitations ! Vous avez deviné le mot : $mot"
 else
